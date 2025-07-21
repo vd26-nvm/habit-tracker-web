@@ -2,44 +2,209 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Habit Tracker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap CDN -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    :root {
+      --rose: #D6A2AD;
+      --sand: #C3B59F;
+      --olive: #A0AF84;
+      --sage: #668F80;
+      --midnight: #4A6670;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    .hero-section {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .hero-overlay {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .title {
+      font-size: 3rem;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .scroll-section {
+      height: 300vh;
+      position: relative;
+      background: var(--sand);
+    }
+
+    .scroll-buttons {
+      position: sticky;
+      top: 40vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      z-index: 10;
+    }
+
+    .scroll-btn {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 2rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .scroll-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+
+    #btn-add {
+      background-color: var(--rose);
+      color: white;
+    }
+
+    #btn-send {
+      background-color: var(--olive);
+      color: white;
+    }
+
+    #btn-exchange {
+      background-color: var(--sage);
+      color: white;
+    }
+
+    .footer-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: var(--midnight);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      color: white;
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body>
 
-  <div class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
-        <div class="card shadow">
-          <div class="card-body">
-            <h1 class="text-center mb-4">Habit Tracker</h1>
+  <section class="hero-section">
+    <img src="https://via.placeholder.com/1200x600" alt="hero" class="hero-image">
+    <div class="hero-overlay">
+      <h1 class="title">Track. Improve. Succeed.</h1>
+      <p class="subtitle">Your personalized habit journey starts here.</p>
+    </div>
+  </section>
 
-            <form id="habit-form" class="mb-4">
-              <div class="mb-3">
-                <input type="text" id="habit-name" class="form-control" placeholder="Enter habit name" required>
-              </div>
-              <div class="mb-3">
-                <select id="habit-frequency" class="form-select" required>
-                  <option value="">Select frequency</option>
-                  <option value="Daily">Daily</option>
-                  <option value="Weekly">Weekly</option>
-                </select>
-              </div>
-              <button type="submit" class="btn btn-primary w-100">Add Habit</button>
-            </form>
-
-            <h4 class="text-center">My Habits</h4>
-            <ul id="habit-list" class="list-group mt-3"></ul>
-          </div>
-        </div>
+  <section class="scroll-section">
+    <div class="scroll-buttons">
+      <div class="scroll-btn" id="btn-add">
+        <div class="icon">+</div>
+        <div class="label">Add</div>
+      </div>
+      <div class="scroll-btn" id="btn-send">
+        <div class="icon">&#9993;</div>
+        <div class="label">Send</div>
+      </div>
+      <div class="scroll-btn" id="btn-exchange">
+        <div class="icon">&#8644;</div>
+        <div class="label">Exchange</div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <script src="script.js"></script>
+  <footer class="footer-nav">
+    <div class="nav-btn">Home</div>
+    <div class="nav-btn">Personal</div>
+    <div class="nav-btn">Business</div>
+    <div class="nav-btn">Company</div>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.from("#btn-add", {
+      scrollTrigger: {
+        trigger: ".scroll-section",
+        start: "top 70%",
+        toggleActions: "play none none reverse"
+      },
+      y: 100,
+      opacity: 0,
+      duration: 1
+    });
+
+    gsap.from("#btn-send", {
+      scrollTrigger: {
+        trigger: "#btn-add",
+        start: "top 70%",
+        toggleActions: "play none none reverse"
+      },
+      y: 100,
+      opacity: 0,
+      duration: 1
+    });
+
+    gsap.from("#btn-exchange", {
+      scrollTrigger: {
+        trigger: "#btn-send",
+        start: "top 70%",
+        toggleActions: "play none none reverse"
+      },
+      y: 100,
+      opacity: 0,
+      duration: 1
+    });
+
+    gsap.to(".hero-image", {
+      scrollTrigger: {
+        trigger: ".hero-section",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      },
+      scale: 1.1,
+      filter: "brightness(0.7)"
+    });
+  </script>
 </body>
 </html>
